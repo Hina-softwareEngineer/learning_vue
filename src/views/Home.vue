@@ -12,19 +12,9 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-3 column" v-for="product in latestProducts" v-bind:key="product.id">
-    <div class="card" style="">
-  <img v-bind:src="product.get_thumbnail" class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">{{product.name}}</h5>
-    <p class="card-text">${{product.price}}</p>
-
-    <a href="#" class="btn btn-primary">
-      <router-link v-bind:to="product.get_absolute_url" class="text-white"> View Details</router-link>
-      </a>
-  </div>
-</div>
-    </div>
+    <ProductBox v-for="product in latestProducts" 
+    v-bind:key="product.id"
+    v-bind:product="product" />
     
   </div>
 </div>
@@ -36,6 +26,7 @@
 <script>
 // @ is an alias to /src
 import axios from 'axios';
+import ProductBox from '@/components/ProductBox';
 
 export default {
   name: "Home",
@@ -44,16 +35,21 @@ export default {
       latestProducts:[]
     }
   },
-  components:{},
+  components:{
+    ProductBox
+  },
   mounted(){
+    document.title="Home | Djackets";
     this.getLatestProducts()
   },
   methods:{
-    getLatestProducts(){
-      axios.get("/api/v1/latest-products/")
+    async getLatestProducts(){
+      this.$store.commit('setIsLoading',true);
+      await axios.get("/api/v1/latest-products/")
       .then(res => {this.latestProducts=res.data;
       console.log('---res---',res.data);})
       .catch(err => console.log(err))
+      this.$store.commit('setIsLoading',false);
     }
   }
 };

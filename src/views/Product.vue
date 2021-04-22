@@ -44,14 +44,17 @@ export default {
         this.getProduct();
     },
     methods:{
-        getProduct(){
+        async getProduct(){
+            this.$store.commit('setIsLoading',true);
             console.log("---params---",this.$route.params)
             const category_slug=this.$route.params.category_slug
             const product_slug=this.$route.params.product_slug
 
-            axios.get(`/api/v1/products/${category_slug}/${product_slug}`)
-            .then(res => this.product=res.data)
+            await axios.get(`/api/v1/products/${category_slug}/${product_slug}`)
+            .then(res => {this.product=res.data;
+            document.title=this.product.name+"| Djackets";})
             .catch(err => console.log(err))
+            this.$store.commit("setIsLoading",false);
 
         },
         addToCart(){

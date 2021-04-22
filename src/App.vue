@@ -15,6 +15,10 @@
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" @click="showMobileMenu = !showMobileMenu">
       <span class="navbar-toggler-icon"></span>
     </button>
+     <form method="get" action="/search" class="d-flex">
+        <input name='query' class="form-control me-2" type="search" placeholder="What are you looking for?" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
     <div class="collapse navbar-collapse" id="navbarSupportedContent" v-bind:class="{'active' : showMobileMenu}">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <li class="nav-item">
@@ -40,6 +44,9 @@ shopping_cart
   </div>
   </nav>
   </div>
+
+<div class="spinner-border text-primary" v-bind:class="{'is-loading': $store.state.isLoading}" style="display : none;" role="status">
+</div>
 
   <section class="section">
     <router-view />
@@ -78,6 +85,8 @@ shopping_cart
   }
 </script>
 
-<style lang="sass">
-
+<style >
+  .is-loading{
+    display : block !important;
+  }
 </style>
