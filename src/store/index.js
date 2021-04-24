@@ -7,32 +7,55 @@ export default createStore({
     },
     isAuthenticated: false,
     token: '',
-    isLoading:false
+    isLoading: false,
   },
   mutations: {
     initializeStore(state) {
-      console.log("--", state);
-      if (localStorage.getItem("cart")) {
-        state.cart=JSON.parse(localStorage.getItem('cart'))
+      console.log('--', state);
+      if (localStorage.getItem('cart')) {
+        state.cart = JSON.parse(localStorage.getItem('cart'));
+      } else {
+        localStorage.setItem('cart', JSON.stringify(state.cart));
       }
-      else {
-        localStorage.setItem('cart',JSON.stringify(state.cart))
+
+      if (localStorage.getItem('token')) {
+        state.token = localStorage.getItem('token');
+        state.isAuthenticated = true;
+      } else {
+        state.token = '';
+        state.isAuthenticated = false;
       }
     },
-    addToCart(state, item) { 
-      const exists = state.cart.items.filter(i => i.product.id === item.product.id);
-      console.log( exists, '---------before exist----');
+    addToCart(state, item) {
+      const exists = state.cart.items.filter(
+        (i) => i.product.id === item.product.id
+      );
+      console.log(exists, '---------before exist----');
       if (exists.length) {
-        exists[0].quantity=parseInt(exists[0].quantity)+parseInt(item.quantity)
+        exists[0].quantity =
+          parseInt(exists[0].quantity) + parseInt(item.quantity);
       } else {
         state.cart.items.push(item);
       }
-      console.log(state, exists,'---------after exist----');
+      console.log(state, exists, '---------after exist----');
       localStorage.setItem('cart', JSON.stringify(state.cart));
     },
-    setIsLoading(state, status) { 
-      state.isLoading=status
-    }
+    setIsLoading(state, status) {
+      state.isLoading = status;
+    },
+    setToken(state, token) {
+      state.token = token;
+      state.isAuthenticated = true;
+    },
+    removeToken(state) {
+      state.token = '';
+      state.isAuthenticated = false;
+    },
+    clearCart(state) {
+      state.cart = { items: [] };
+
+      localStorage.setItem('cart', JSON.stringify(state.cart));
+    },
   },
   actions: {},
   modules: {},
